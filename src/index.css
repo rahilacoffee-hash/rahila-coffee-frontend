@@ -1,0 +1,276 @@
+@import "tailwindcss";
+
+:root {
+  --default-font-family:      
+;
+}
+
+.container {
+  width: 90%;
+  margin: auto;
+}
+
+body {
+  font-family: "Montserrat", sans-serif;
+  font-optical-sizing: auto;
+  background-color: #1a1a1a;
+  color: #2c1a0e;
+ 
+}
+
+/* .top-strip{
+    border: 2px solid rgba(0, 0, 0, 0.1);
+} */
+
+.bg-org {
+  background: #572602;
+}
+
+.link:hover {
+  color: #572602;
+}
+
+::-webkit-scrollbar {
+  width: 8px !important;
+  height: 8px !important;
+}
+::-webkit-scrollbar-thumb {
+  background: #5725024c;
+}
+
+::-webkit-scrollbar-track {
+  background: #fff;
+}
+.logo {
+  font-family: "Pacifico", cursive;
+}
+
+.header {
+  background-color: #1a1a1a;
+  width: 100% !important;
+}
+
+.italic {
+  font-family: "Pacifico", cursive;
+}
+
+.col1 span {
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.spin {
+  animation: spin 8s linear infinite;
+  animation: floatSpin 6s ease-out infinite;
+}
+
+.hero {
+  padding-top: 50px;
+}
+
+.log {
+  background-color: #a0522d;
+  color: #f5f0eb;
+  transition: background-color 0.3s ease;
+}
+
+@keyframes floatSpin {
+  0% {
+    transform: translateY(0px) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-15px) rotate(180deg);
+  }
+  100% {
+    transform: translateY(0px) rotate(360deg);
+  }
+}
+
+.herop {
+  opacity: 0.75;
+}
+
+.imgbg {
+  opacity: 0.15;
+}
+
+.fliterText {
+  font-family: "Eagle Lake", serif;
+}
+
+.swiper-button-next,
+.swiper-button-prev {
+  background-color: white !important;
+  width: 35px !important;
+  height: 35px !important;
+  border-radius: 50% !important ;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2) !important;
+  font-size: 14px !important;
+  color: #333 !important;
+}
+
+.swiper-button-next::after,
+.swiper-button-prev::after {
+  font-size: 14px !important;
+  color: #333 !important;
+}
+
+.swiper-button-next svg,
+.swiper-button-prev svg {
+  width: 30% !important;
+  height: 50% !important;
+}
+
+.SmlBtn .swiper-button-next,
+.SmlBtn .swiper-button-prev {
+  width: 30px !important;
+  height: 30px !important;
+  min-width: 30px !important;
+}
+
+.SmlBtn .swiper-button-next::after,
+.SmlBtn .swiper-button-prev::after {
+  font-size: 140x !important;
+  color: #2c1a0e !important;
+}
+
+.MuiTabs-indicator {
+  background-color: #572602 !important;
+}
+
+.css-1usuzwp-MuiButtonBase-root-MuiTab-root.Mui-selected {
+  color: #572602 !important;
+}
+
+.btn-org {
+  background: #572602 !important;
+  color: #f5f0eb !important;
+  font-weight: 500 !important;
+  font-size: 16px !important;
+  padding: 7px 20px !important;
+}
+
+.css-vuhw6e-MuiButtonBase-root-MuiSwitchBase-root-MuiCheckbox-root.Mui-checked,
+.css-vuhw6e-MuiButtonBase-root-MuiSwitchBase-root-MuiCheckbox-root.MuiCheckbox-indeterminate {
+  color: #572602 !important;
+}
+
+.MuiFormControlLabel-label {
+  font-size: 13px !important;
+}
+
+.MuiCheckedbox-root {
+  padding: 6px !important;
+}
+
+.ReactCollapse--collapse {
+  transition: height 400ms;
+}
+.MuiPaginationItems-pages {
+  background: #2c1a0e !important;
+  color: #fff !important;
+}
+
+.dic {
+  font-size: 14px;
+  line-height: 25px;
+}
+
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+}
+
+.btn-lg {
+  font-size: 18px !important;
+  padding: 10px 20px !important;
+}
+
+.cartPanel .MuiPaper-root {
+  width: 470px;
+  overflow: hidden;
+}
+
+.otpBox input {
+  border: 1px solid #2c1a0e !important;
+  outline: none !important;
+  border-radius: 4px;
+}
+
+.otpBox input:focus {
+  border: 1px solid #572602 !important;
+}
+
+.otpPage .container {
+  height: 90vh;
+  display: flex;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-weight: 600;
+}
+
+#account-menu .MuiPaper-root {
+  width: 200px !important;
+}
+
+.myAccountTabs li a {
+  position: relative;
+}
+
+.myAccountTabs li a::before {
+  content: "";
+  width: 3px;
+  height: 50%;
+  position: absolute;
+  top: 50%;
+  left: 0px;
+  background: #a0522d;
+  transition: all 0.3s ease-in-out;
+  opacity: 0;
+}
+
+.myAccountTabs li a.active::before {
+  height: 100%;
+  opacity: 1;
+  top: 0px;
+}
+
+.myAccountTabs li a.active button svg {
+  color: #923d08 !important;
+}
+
+.btn-border {
+  background: none !important;
+  color: #923d08 !important;
+  border: 1px solid #923d08 !important;
+  font-weight: 500 !important;
+  font-size: 16px !important;
+  padding: 7px 20px !important;
+}
+
+.btn-border:hover {
+  background: #f5f0eb !important;
+  color: #1a1a1a !important;
+  border: none !important;
+}
+
+.btn-sm {
+  font-size: 12px !important;
+  padding: 5px 20px !important;
+}
