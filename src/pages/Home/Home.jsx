@@ -8,7 +8,6 @@ import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import ProductSlider from "../../components/product/ProductSlider";
 import CoffeeStories from "../Stories/CoffeeStories";
-import ProductItems from "../../components/product/ProductItems";
 import api from "../../api/axios";
 import HomeProductItems from "../../components/product/HomeProductItems";
 
