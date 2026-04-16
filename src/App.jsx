@@ -26,8 +26,8 @@ import CoffeeStories from "./pages/Stories/CoffeeStories";
 import ContactUs from "./pages/Contact/ContactUs";
 import AboutUs from "./pages/About/AboutUs";
 import HelpCenter from "./pages/HelpCenter/HelpCenter";
-import VerifyForgotOTP from "./pages/Verify/verify-forgot-otp";
 import ChangePassword from "./pages/Login_signup/ChangePassword";
+import VerifyForgotOTP from "./pages/VerifyForgotOTP";
 
 export const MyContext = createContext();
 
