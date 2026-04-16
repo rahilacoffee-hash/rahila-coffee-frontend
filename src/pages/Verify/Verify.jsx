@@ -50,7 +50,7 @@ const Verify = () => {
   return (
     <section className="section py-10">
       <div className="container">
-        <div className="card shadow-md w-[500px] m-auto rounded-md bg-white p-5 px-10">
+        <div className="card shadow-md w-full max-w-[500px] mx-auto rounded-md bg-white p-5 sm:px-10">
           <div className="text-center flex items-center justify-center">
             <img src={shield} width="80" alt="shield" />
           </div>

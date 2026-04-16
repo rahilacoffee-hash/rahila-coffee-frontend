@@ -141,128 +141,93 @@ const App = () => {
 
           {/* ── Cart Drawer ── */}
           <Drawer
-            open={openCartPanel}
-            onClose={toggleCartPanel(false)}
-            anchor="right"
-            className="cartPanel overflow-hidden"
-          >
-            {/* Header */}
-            <div className="flex items-center justify-between py-3 px-4 gap-3 border-b border-gray-200">
-              <h4 className="font-[600]">Shopping Cart ({cartItems.length})</h4>
-              <MdOutlineClose
-                className="text-[20px] cursor-pointer"
-                onClick={toggleCartPanel(false)}
+  open={openCartPanel}
+  onClose={toggleCartPanel(false)}
+  anchor="right"
+>
+  <div className="w-[100vw] xs:w-[340px] sm:w-[380px] h-full flex flex-col bg-white">
+
+    {/* Header */}
+    <div className="flex items-center justify-between py-3 px-4 border-b">
+      <h4 className="font-semibold">
+        Shopping Cart ({cartItems.length})
+      </h4>
+      <MdOutlineClose
+        className="text-[22px] cursor-pointer"
+        onClick={toggleCartPanel(false)}
+      />
+    </div>
+
+    {/* Items */}
+    <div className="flex-1 overflow-y-auto px-4 py-3">
+      {cartLoading ? (
+        <p className="text-center text-gray-400 text-sm py-5">Loading...</p>
+      ) : cartItems.length === 0 ? (
+        <p className="text-center text-gray-400 text-sm py-5">
+          Your cart is empty
+        </p>
+      ) : (
+        cartItems.map(item => (
+          <div key={item._id} className="flex items-start gap-3 border-b py-4">
+
+            <img
+              src={item.productId?.images?.[0]}
+              className="w-[60px] h-[60px] sm:w-[70px] sm:h-[70px] rounded-md object-cover"
+            />
+
+            <div className="flex-1 relative">
+              <h4 className="text-sm font-medium line-clamp-2">
+                {item.productId?.name}
+              </h4>
+
+              <p className="flex justify-between mt-1 text-xs text-gray-500">
+                <span>Qty: {item.quantity}</span>
+                <span className="text-amber-700 font-semibold">
+                  ${(item.productId?.price * item.quantity).toFixed(2)}
+                </span>
+              </p>
+
+              <MdDeleteOutline
+                onClick={() => removeFromCartDrawer(item._id, item.productId?._id)}
+                className="absolute top-0 right-0 cursor-pointer text-red-400"
               />
             </div>
+          </div>
+        ))
+      )}
+    </div>
 
-            {/* Cart Items */}
-            <div className="scroll w-full max-h-[380px] overflow-y-scroll overflow-x-hidden py-3 px-4">
-              {cartLoading ? (
-                <p className="text-center text-gray-400 text-[13px] py-5">
-                  Loading...
-                </p>
-              ) : cartItems.length === 0 ? (
-                <p className="text-center text-gray-400 text-[13px] py-5">
-                  Your cart is empty
-                </p>
-              ) : (
-                cartItems.map((item) => (
-                  <div
-                    key={item._id}
-                    className="cartItem w-full flex items-center gap-4 border-b border-gray-200 pb-4 pt-4"
-                  >
-                    <div className="img w-[25%] overflow-hidden h-[80px] rounded-md">
-                      <Link
-                        to={`/Product/${item.productId?._id}`}
-                        className="block group"
-                        onClick={toggleCartPanel(false)}
-                      >
-                        <img
-                          src={item.productId?.images?.[0]}
-                          alt={item.productId?.name}
-                          className="w-full h-full object-cover group-hover:scale-105 transition-all"
-                        />
-                      </Link>
-                    </div>
+    {/* Footer */}
+    <div className="border-t px-4 py-3 space-y-3">
+      <div className="flex justify-between font-semibold text-sm">
+        <span>{cartItems.length} items</span>
+        <span className="text-amber-700">${cartSubtotal.toFixed(2)}</span>
+      </div>
 
-                    <div className="info w-[75%] pr-5 relative">
-                      <h4 className="text-[14px] font-[500] pr-6 line-clamp-2">
-                        <Link
-                          to={`/Product/${item.productId?._id}`}
-                          className="link transition-all"
-                          onClick={toggleCartPanel(false)}
-                        >
-                          {item.productId?.name}
-                        </Link>
-                      </h4>
-                      <p className="flex items-center gap-5 mt-1 mb-1">
-                        <span className="text-[12px] text-gray-500">
-                          Qty:{" "}
-                          <span className="font-[600]">{item.quantity}</span>
-                        </span>
-                        <span className="text-amber-700 font-[600] text-[13px]">
-                          ${(item.productId?.price * item.quantity).toFixed(2)}
-                        </span>
-                      </p>
-                      <MdDeleteOutline
-                        onClick={() =>
-                          removeFromCartDrawer(item._id, item.productId?._id)
-                        }
-                        className="absolute top-[0px] right-[0px] cursor-pointer text-[20px] text-red-400 hover:text-red-600 transition-all"
-                      />
-                    </div>
-                  </div>
-                ))
-              )}
-            </div>
+      <div className="flex justify-between text-sm">
+        <span>Shipping</span>
+        <span>$5.00</span>
+      </div>
 
-            <br />
+      <div className="flex justify-between font-bold">
+        <span>Total</span>
+        <span className="text-amber-700">
+          ${(cartSubtotal + 5).toFixed(2)}
+        </span>
+      </div>
 
-            {/* Bottom Summary */}
-            <div className="bottomSection absolute bottom-[10px] w-full overflow-hidden pr-5">
-              <div className="bottomInfo py-3 px-4 flex items-center justify-between w-full border-t border-gray-200 flex-col gap-1">
-                <div className="flex items-center justify-between w-full">
-                  <span className="text-[14px] font-[600]">
-                    {cartItems.length} item{cartItems.length !== 1 ? "s" : ""}
-                  </span>
-                  <span className="text-amber-700 font-[600]">
-                    ${cartSubtotal.toFixed(2)}
-                  </span>
-                </div>
-                <div className="flex items-center justify-between w-full">
-                  <span className="text-[14px] font-[600]">Shipping</span>
-                  <span className="text-gray-500 font-[600]">$5.00</span>
-                </div>
-              </div>
+      <div className="flex flex-col sm:flex-row gap-2">
+        <Link to="/cart" onClick={toggleCartPanel(false)}>
+          <Button className="btn-org w-full">View Cart</Button>
+        </Link>
 
-              <div className="bottomInfo py-3 px-4 flex items-center justify-between w-full border-t border-gray-200 flex-col gap-3">
-                <div className="flex items-center justify-between w-full">
-                  <span className="text-[14px] font-[600]">Total</span>
-                  <span className="text-amber-700 font-[700]">
-                    ${(cartSubtotal + 5).toFixed(2)}
-                  </span>
-                </div>
-                <div className="flex items-center justify-between w-full gap-3">
-                  <Link
-                    to="/cart"
-                    className="w-[50%] block"
-                    onClick={toggleCartPanel(false)}
-                  >
-                    <Button className="btn-org btn-lg w-full">View Cart</Button>
-                  </Link>
-                  <Link
-                    to="/checkout"
-                    className="w-[50%] block"
-                    onClick={toggleCartPanel(false)}
-                  >
-                    <Button className="btn-org btn-border btn-lg w-full">
-                      Checkout
-                    </Button>
-                  </Link>
-                </div>
-              </div>
-            </div>
-          </Drawer>
+        <Link to="/checkout" onClick={toggleCartPanel(false)}>
+          <Button className="btn-org btn-border w-full">Checkout</Button>
+        </Link>
+      </div>
+    </div>
+  </div>
+</Drawer>
         </MyContext.Provider>
       </BrowserRouter>
       <Toaster />

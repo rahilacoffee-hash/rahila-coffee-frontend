@@ -74,114 +74,87 @@ const CartPage = () => {
   }
 
   return (
-    <section className="section py-10 bg-white pb-10">
-      <div className="container w-[70%] flex max-w-[80%] gap-5">
-        <div className="letfPart w-[75%]">
-          <h2 className="font-[600] text-[17px]">Your Cart</h2>
-          <p className="mt-0">
-            There are <span className="font-bold text-slate-700">{cartItems.length}</span> product{cartItems.length !== 1 ? "s" : ""} in your cart
-          </p>
+   <section className="section py-10 bg-white">
+  <div className="container max-w-[1400px] flex flex-col lg:flex-row gap-6">
 
-          {loading ? (
-            <p className="text-center text-gray-400">Loading cart...</p>
-          ) : cartItems.length === 0 ? (
-            <div className="text-center py-10">
-              <p className="text-gray-400 mb-4">Your cart is empty</p>
-              <Link to="/ShopNow"><Button className="btn-org">Shop Now</Button></Link>
-            </div>
-          ) : (
-            <div className="shadow-md rounded-md p-5 bg-gray-100">
-              {cartItems.map(item => (
-                <div key={item._id} className="cartItems p-3 w-full flex items-center gap-4 pb-5 pt-5 border-b border-[rgba(0,0,0,0.1)]">
-                  <div className="img w-[15%] rounded-md overflow-hidden">
-                    <Link to={`/Product/${item.productId?._id}`} className="group">
-                      <img
-                        src={item.productId?.images?.[0]}
-                        alt={item.productId?.name}
-                        className="w-full group-hover:scale-105 transition-all"
-                      />
-                    </Link>
-                  </div>
+    {/* LEFT */}
+    <div className="w-full lg:w-[70%]">
+      <h2 className="font-semibold text-[20px]">Your Cart</h2>
+      <p className="mb-4">
+        There are <b>{cartItems.length}</b> product{cartItems.length !== 1 && "s"} in your cart
+      </p>
 
-                  <div className="info w-[85%] relative">
-                    <IoMdClose
-                      onClick={() => removeItem(item._id, item.productId?._id)}
-                      className="cursor-pointer absolute top-[0px] right-[0px] text-[22px] link transition-all"
-                    />
-                    <h3 className="text-[16px] font-bold">
-                      <Link to={`/Product/${item.productId?._id}`} className="link">
-                        {item.productId?.name}
-                      </Link>
-                    </h3>
-                    <p className="text-gray-600 text-[11px] capitalize">
-                      {item.productId?.roastLevel} · {item.productId?.grindType}
-                    </p>
-                    <Rating size="small" value={item.productId?.rating || 0} readOnly />
+      {loading ? (
+        <p className="text-center text-gray-400">Loading cart...</p>
+      ) : cartItems.length === 0 ? (
+        <div className="text-center py-10">
+          <p className="text-gray-400 mb-4">Your cart is empty</p>
+          <Link to="/ShopNow"><Button className="btn-org">Shop Now</Button></Link>
+        </div>
+      ) : (
+        <div className="shadow-md rounded-md p-5 bg-gray-100">
 
-                    <div className="flex items-center gap-4">
-                      <div className="relative">
-                        <span
-                          className="flex items-center justify-center bg-[#f1f1f1] text-[11px] font-[600] py-1 px-2 rounded-md cursor-pointer"
-                          onClick={(e) => handleClickQty(e, item._id)}
-                        >
-                          Qty: {item.quantity} <FaAngleDown />
-                        </span>
-                        <Menu
-                          anchorEl={qtyAnchorEls[item._id]}
-                          open={Boolean(qtyAnchorEls[item._id])}
-                          onClose={() => handleCloseQty(item._id, item.productId?._id, null)}
-                          disableRestoreFocus
-                        >
-                          {[1,2,3,4,5,6,7,8,9,10].map(num => (
-                            <MenuItem key={num} onClick={() => handleCloseQty(item._id, item.productId?._id, num)}>
-                              {num}
-                            </MenuItem>
-                          ))}
-                        </Menu>
-                      </div>
-                    </div>
+          {cartItems.map(item => (
+            <div key={item._id} className="flex flex-col sm:flex-row gap-4 border-b py-5">
 
-                    <div className="flex items-center gap-4 mt-2">
-                      <span className="price text-amber-700 text-[14px] font-[600]">
-                        ${(item.productId?.price * item.quantity).toFixed(2)}
-                      </span>
-                    </div>
-                  </div>
+              <img
+                src={item.productId?.images?.[0]}
+                className="w-full sm:w-[120px] rounded-md object-cover"
+              />
+
+              <div className="flex-1 relative">
+                <IoMdClose
+                  onClick={() => removeItem(item._id, item.productId?._id)}
+                  className="absolute top-0 right-0 text-[22px] cursor-pointer"
+                />
+
+                <h3 className="font-bold">{item.productId?.name}</h3>
+
+                <p className="text-gray-600 text-sm">
+                  {item.productId?.roastLevel} · {item.productId?.grindType}
+                </p>
+
+                <div className="mt-3 font-bold text-amber-700">
+                  ${(item.productId?.price * item.quantity).toFixed(2)}
                 </div>
-              ))}
+              </div>
             </div>
-          )}
+          ))}
+
+        </div>
+      )}
+    </div>
+
+    {/* RIGHT TOTALS */}
+    <div className="w-full lg:w-[30%]">
+      <div className="shadow-md rounded-md bg-white p-5 lg:sticky lg:top-24">
+        <h3 className="font-semibold mb-3">Cart Totals</h3>
+
+        <div className="flex justify-between mb-2">
+          <span>Subtotal</span>
+          <b>${subtotal.toFixed(2)}</b>
         </div>
 
-        <div className="rightPart w-[25%]">
-          <div className="shadow-md rounded-md bg-white p-5">
-            <h3>Cart Totals</h3>
-            <hr />
-            <p className="flex items-center justify-between mb-2">
-              <span className="text-[14px] font-[500]">Subtotal</span>
-              <span className="text-amber-700 font-bold">${subtotal.toFixed(2)}</span>
-            </p>
-            <p className="flex items-center justify-between mb-2">
-              <span className="text-[14px] font-[500]">Shipping</span>
-              <span className="font-bold">Free</span>
-            </p>
-            <p className="flex items-center justify-between mb-2">
-              <span className="text-[14px] font-[500]">Estimate for</span>
-              <span className="font-bold">Nigeria</span>
-            </p>
-            <p className="flex items-center justify-between">
-              <span className="text-[14px] font-[500]">Total</span>
-              <span className="text-amber-700 font-bold">${subtotal.toFixed(2)}</span>
-            </p>
-            <Link to="/checkout" className="w-full block">
-              <Button className="btn-org btn-lg !w-full flex gap-2">
-                <BsBagCheckFill className="text-[20px]" /> Checkout
-              </Button>
-            </Link>
-          </div>
+        <div className="flex justify-between mb-2">
+          <span>Shipping</span>
+          <b>Free</b>
         </div>
+
+        <div className="flex justify-between font-bold text-lg">
+          <span>Total</span>
+          <span className="text-amber-700">${subtotal.toFixed(2)}</span>
+        </div>
+
+        <Link to="/checkout">
+          <Button className="btn-org btn-lg w-full mt-4">
+            Checkout
+          </Button>
+        </Link>
       </div>
-    </section>
+    </div>
+
+  </div>
+</section>
   );
 };
 
