@@ -51,39 +51,60 @@ const CheckoutForm = () => {
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (!stripe || !elements || !clientSecret) return;
+  e.preventDefault();
 
-    setLoading(true);
-    setError("");
+  if (!stripe || !elements || !clientSecret) return;
 
-    try {
-      const { error: stripeError, paymentIntent } = await stripe.confirmCardPayment(
-        clientSecret,
-        { payment_method: { card: elements.getElement(CardElement) } }
-      );
+  setLoading(true);
+  setError("");
 
-      if (stripeError) {
-        setError(stripeError.message);
-        return;
-      }
+  try {
+    // ✅ STEP 1: SAVE ADDRESS FIRST
+    const addressRes = await api.post("/address/create", {
+      street: address.street,
+      city: address.city,
+      zip: address.zip,
+      country: address.country,
+    });
 
-      if (paymentIntent.status === "succeeded") {
-        await api.post("/order/place", {
-          paymentId: paymentIntent.id,
-          delivery_address: address,
-        });
-        context.openAlertBox("success", "Order placed successfully!");
-        context.fetchCartItems?.();
-        navigate("/my-orders");
-      }
-    } catch (err) {
-      setError(err.response?.data?.message || "Payment failed");
-    } finally {
-      setLoading(false);
+    const addressId = addressRes.data.data._id;
+
+    // ✅ STEP 2: CONFIRM PAYMENT
+    const { error: stripeError, paymentIntent } =
+      await stripe.confirmCardPayment(clientSecret, {
+        payment_method: {
+          card: elements.getElement(CardElement),
+        },
+      });
+
+    if (stripeError) {
+      setError(stripeError.message);
+      return;
     }
-  };
 
+    // ✅ STEP 3: PLACE ORDER WITH ADDRESS ID
+    if (paymentIntent.status === "succeeded") {
+      await api.post("/order/place", {
+        paymentId: paymentIntent.id,
+        delivery_address: addressId, // ✅ FIXED
+      });
+
+      context.openAlertBox("success", "Order placed successfully!");
+
+      // ✅ UPDATE CART IMMEDIATELY
+      context.setCartItems?.([]);
+      context.fetchCartItems?.();
+
+      navigate("/my-orders");
+    }
+
+  } catch (err) {
+    console.error(err);
+    setError(err.response?.data?.message || "Payment failed");
+  } finally {
+    setLoading(false);
+  }
+};
   const subtotal = cartItems.reduce(
     (sum, item) => sum + (item.productId?.price || 0) * item.quantity, 0
   );
