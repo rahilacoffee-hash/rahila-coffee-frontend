@@ -75,26 +75,29 @@ export default function AccountMenu() {
         anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
       >
         <Divider />
+         <Link to="/login">
         <MenuItem onClick={handleClose}>
-        <Link to="/login">
+       
           <ListItemIcon>
             <FaUserLarge fontSize="small" />
           </ListItemIcon>
 
           login
-          </Link>
+       
         </MenuItem>
+           </Link>
 
-
+  <Link to="/signUp">
         <MenuItem onClick={handleClose}>
-        <Link to="/signUp">
+      
           <ListItemIcon>
             <PersonAdd fontSize="small" />
           </ListItemIcon>
 
           Sign Up
-          </Link>
+       
         </MenuItem>
+           </Link>
       </Menu>
     </React.Fragment>
   );

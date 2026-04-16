@@ -10,6 +10,7 @@ const ForgotPassword = () => {
   const [isPasswordShow2, setIsPasswordShow2] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+
   const [formFields, setFormFields] = useState({
     newPassword: "",
     confirmPassword: "",
@@ -25,6 +26,13 @@ const ForgotPassword = () => {
     e.preventDefault();
     setError("");
 
+    const email = localStorage.getItem("pendingEmail");
+
+    if (!email) {
+      setError("Session expired. Please request password reset again.");
+      return;
+    }
+
     if (!formFields.newPassword || !formFields.confirmPassword) {
       setError("Please fill in all fields");
       return;
@@ -36,13 +44,13 @@ const ForgotPassword = () => {
     }
 
     setLoading(true);
-    try {
-      const email = localStorage.getItem("pendingEmail");
 
+    try {
       const res = await api.post("/user/reset-password", {
         email,
-        newPassword: formFields.newPassword,
-        confirmPassword: formFields.confirmPassword,
+        otp, // VERY IMPORTANT
+        newPassword,
+        confirmPassword,
       });
 
       if (res.data.success) {
@@ -50,82 +58,88 @@ const ForgotPassword = () => {
         navigate("/login");
       }
     } catch (err) {
-      setError(err.response?.data?.message || "Failed to reset password");
+      console.log(err); // Debug
+      setError(
+        err.response?.data?.message ||
+          err.message ||
+          "Failed to reset password",
+      );
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <section className="section py-10">
-      <div className="container">
-        <div className="card shadow-md w-[500px] m-auto rounded-md bg-white p-5 px-10">
-          <h3 className="font-[600] text-center text-[18px]">
+    <section className="py-6 sm:py-10 px-3">
+      <div className="max-w-lg mx-auto">
+        <div className="shadow-md rounded-md bg-white p-5 sm:p-8">
+          <h3 className="font-semibold text-center text-[18px]">
             Reset Password
           </h3>
 
           {error && (
-            <p className="text-red-500 text-[13px] mt-3 text-center">{error}</p>
+            <p className="text-red-500 text-sm mt-3 text-center">{error}</p>
           )}
 
           <form className="w-full mt-5" onSubmit={handleChangePassword}>
-
-            <div className="form-group w-full mb-5 relative">
+            {/* New Password */}
+            <div className="mb-5 relative">
               <TextField
-                type={isPasswordShow === false ? "password" : "text"}
-                id="newPassword"
+                type={!isPasswordShow ? "password" : "text"}
                 label="New Password *"
                 variant="outlined"
-                className="w-full"
+                fullWidth
                 name="newPassword"
                 value={formFields.newPassword}
                 onChange={onChangeInput}
               />
+
               <Button
-                className="!absolute !top-[10px] !right-[10px] !z-50 !w-[35px] !min-w-[35px] !h-[35px] !rounded-full !text-black"
+                type="button"
                 onClick={() => setIsPasswordShow(!isPasswordShow)}
+                className="!absolute !top-[10px] !right-[10px] !min-w-[35px] !h-[35px]"
               >
-                {isPasswordShow === true ? (
-                  <IoEye className="text-[20px] opacity-75" />
+                {isPasswordShow ? (
+                  <IoEye className="!text-black" />
                 ) : (
-                  <IoEyeOff className="text-[20px] opacity-75" />
+                  <IoEyeOff className="!text-black" />
                 )}
               </Button>
             </div>
 
-            <div className="form-group w-full mb-5 relative">
+            {/* Confirm Password */}
+            <div className="mb-5 relative">
               <TextField
-                type={isPasswordShow2 === false ? "password" : "text"}
-                id="confirmPassword"
+                type={!isPasswordShow2 ? "password" : "text"}
                 label="Confirm Password *"
                 variant="outlined"
-                className="w-full"
+                fullWidth
                 name="confirmPassword"
                 value={formFields.confirmPassword}
                 onChange={onChangeInput}
               />
+
               <Button
-                className="!absolute !top-[10px] !right-[10px] !z-50 !w-[35px] !min-w-[35px] !h-[35px] !rounded-full !text-black"
+                type="button"
                 onClick={() => setIsPasswordShow2(!isPasswordShow2)}
+                className="!absolute !top-[10px] !right-[10px] !min-w-[35px] !h-[35px]"
               >
-                {isPasswordShow2 === true ? (
-                  <IoEye className="text-[20px] opacity-75" />
+                {isPasswordShow2 ? (
+                  <IoEye className="!text-black" />
                 ) : (
-                  <IoEyeOff className="text-[20px] opacity-75" />
+                  <IoEyeOff className="!text-black" />
                 )}
               </Button>
             </div>
 
-            <div className="flex items-center w-full mt-3 mb-3">
-              <Button
-                type="submit"
-                disabled={loading}
-                className="btn-org btn-lg w-full"
-              >
-                {loading ? "Updating..." : "Change Password"}
-              </Button>
-            </div>
-
+            {/* Submit */}
+            <Button
+              type="submit"
+              disabled={loading}
+              className="btn-org w-full mt-3"
+            >
+              {loading ? "Updating..." : "Change Password"}
+            </Button>
           </form>
         </div>
       </div>
