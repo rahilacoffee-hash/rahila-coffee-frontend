@@ -85,104 +85,142 @@ const ProductDetails = () => {
         </div>
       </div>
 
-      <section className="bg-white py-5">
-        <div className="container flex gap-5">
-          <div className="productZoomContainer w-[40%]">
-            <img src={product.images}/>
-          </div>
+     <section className="bg-white py-5">
+  <div className="container flex flex-col lg:flex-row gap-5">
 
-          <div className="productZoomContent w-[60%] pr-10 pl-10">
-            <h1 className="text-[22px] font-bold mb-1">{product.name}</h1>
+    {/* IMAGE */}
+    <div className="w-full lg:w-[40%]">
+      <img
+        src={product.images?.[0]}
+        alt={product.name}
+        className="w-full h-auto rounded-md"
+      />
+    </div>
 
-            <div className="flex items-center gap-3">
-              <span className="text-gray-400 text-[15px]">
-                Origin: <span className="font-[500] text-black opacity-75">{product.origin}</span>
+    {/* DETAILS */}
+    <div className="w-full lg:w-[60%] lg:pr-10 lg:pl-10">
+      <h1 className="text-[18px] sm:text-[22px] font-bold mb-1">
+        {product.name}
+      </h1>
+
+      <div className="flex items-center gap-3 flex-wrap">
+        <span className="text-gray-400 text-[13px] sm:text-[15px]">
+          Origin:{" "}
+          <span className="font-[500] text-black opacity-75">
+            {product.origin}
+          </span>
+        </span>
+      </div>
+
+      <div className="flex items-center gap-2 mt-1">
+        <Rating size="small" value={product.rating || 0} readOnly />
+        <span className="text-[12px] sm:text-[13px] cursor-pointer">
+          Reviews (0)
+        </span>
+      </div>
+
+      <div className="flex items-center justify-between mb-2 mt-3">
+        <h1 className="text-lg sm:text-xl font-bold text-[#2c1a0e]">
+          ${product.price}
+        </h1>
+      </div>
+
+      <p className="mt-3 mb-5 text-[14px] sm:text-[15px]">
+        {product.description}
+      </p>
+
+      <div>
+        <span className="inline-block bg-amber-100 border border-amber-300 text-amber-800 text-[10px] sm:text-xs font-semibold px-2 py-0.5 rounded-full mb-2 capitalize">
+          {product.roastLevel} Roast
+        </span>
+      </div>
+
+      <div>
+        <span className="text-[13px] sm:text-[14px] font-bold">
+          {product.countInStock > 0 ? (
+            <>
+              Available:{" "}
+              <span className="text-amber-800">
+                {product.countInStock}
               </span>
-            </div>
-
-            <div className="flex items-center gap-2">
-              <Rating size="small" value={product.rating || 0} readOnly />
-              <span className="text-[13px] cursor-pointer">Reviews (0)</span>
-            </div>
-
-            <div className="flex items-center justify-between mb-2 mt-3">
-              <div className="flex gap-4">
-                <h1 className="text-base sm:text-lg font-bold text-[#2c1a0e]">
-                  ${product.price}
-                </h1>
-              </div>
-            </div>
-
-            <p className="dic mt-3 pr-10 mb-5">{product.description}</p>
-
-            <div className="flex items-center">
-              <h1 className="inline-block bg-amber-100 border border-amber-300 text-amber-800 text-[10px] sm:text-xs font-semibold px-2 py-0.5 rounded-full mb-2 capitalize">
-                {product.roastLevel} Roast
-              </h1>
-            </div>
-
-            <div>
-              <span className="text-[14px] font-bold">
-                {product.countInStock > 0 ? (
-                  <>Available In Stock: <span className="text-amber-800">{product.countInStock} Items</span></>
-                ) : (
-                  <span className="text-red-500">Out of Stock</span>
-                )}
-              </span>
-            </div>
-
-            <p className="text-[16px] font-[400] mt-4 mb-2 text-[#000]">
-              Free Shipping (Est. Delivery Time 2-3 Days)
-            </p>
-
-            {product.countInStock > 0 && (
-              <div className="flex items-center gap-4">
-                <div className="qtyBoxWrapper w-[70px]">
-                  <QtyBox qty={qty} onChange={setQty} />
-                </div>
-                <Button
-                  onClick={addToCart}
-                  className="rounded-xl font-bold text-sm transition-all btn-org cursor-pointer"
-                >
-                  Add to Cart
-                </Button>
-              </div>
-            )}
-
-            <div className="flex items-center gap-4 mt-6">
-              <span
-                onClick={addToWishlist}
-                className="flex items-center gap-3 text-[15px] link cursor-pointer font-[600]"
-              >
-                <IoMdHeartEmpty /> Add to Wishlist
-              </span>
-              <span className="flex items-center gap-3 text-[15px] link cursor-pointer font-[600]">
-                <IoGitCompareOutline /> Add to Compare
-              </span>
-            </div>
-          </div>
-        </div>
-
-        {/* Tabs */}
-        <div className="container pt-10">
-          <div className="flex items-center gap-8">
-            <span className="link text-[17px] cursor-pointer font-[500]" onClick={() => setActiveTab(0)}>Description</span>
-            <span className="link text-[17px] cursor-pointer font-[500]" onClick={() => setActiveTab(1)}>Reviews</span>
-          </div>
-
-          {activeTab === 0 && (
-            <div className="shadow-md w-full py-5 px-8 rounded-md">
-              <p>{product.description}</p>
-            </div>
+            </>
+          ) : (
+            <span className="text-red-500">Out of Stock</span>
           )}
+        </span>
+      </div>
 
-          {activeTab === 1 && (
-            <div className="shadow-md w-[80%] py-5 px-8 rounded-md">
-              <ProductReviews productId={id} />
-            </div>
-          )}
+      <p className="text-[14px] mt-3 mb-2">
+        Free Shipping (2–3 days)
+      </p>
+
+      {/* ADD TO CART */}
+      {product.countInStock > 0 && (
+        <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 mt-3">
+          <div className="w-[80px]">
+            <QtyBox qty={qty} onChange={setQty} />
+          </div>
+
+          <Button
+            onClick={addToCart}
+            className="btn-org w-full sm:w-auto"
+          >
+            Add to Cart
+          </Button>
         </div>
-      </section>
+      )}
+
+      {/* ACTIONS */}
+      <div className="flex flex-col sm:flex-row gap-3 mt-6">
+        <span
+          onClick={addToWishlist}
+          className="flex items-center gap-2 text-[14px] cursor-pointer font-[600]"
+        >
+          <IoMdHeartEmpty /> Wishlist
+        </span>
+
+        <span className="flex items-center gap-2 text-[14px] cursor-pointer font-[600]">
+          <IoGitCompareOutline /> Compare
+        </span>
+      </div>
+    </div>
+  </div>
+
+  {/* TABS */}
+  <div className="container pt-10">
+    <div className="flex gap-6 border-b pb-2">
+      <span
+        className={`cursor-pointer text-[15px] sm:text-[17px] ${
+          activeTab === 0 ? "font-bold" : ""
+        }`}
+        onClick={() => setActiveTab(0)}
+      >
+        Description
+      </span>
+
+      <span
+        className={`cursor-pointer text-[15px] sm:text-[17px] ${
+          activeTab === 1 ? "font-bold" : ""
+        }`}
+        onClick={() => setActiveTab(1)}
+      >
+        Reviews
+      </span>
+    </div>
+
+    {activeTab === 0 && (
+      <div className="shadow-md w-full py-5 px-4 sm:px-8 rounded-md mt-4">
+        <p className="text-[14px]">{product.description}</p>
+      </div>
+    )}
+
+    {activeTab === 1 && (
+      <div className="shadow-md w-full lg:w-[80%] py-5 px-4 sm:px-8 rounded-md mt-4">
+        <ProductReviews productId={id} />
+      </div>
+    )}
+  </div>
+</section>
     </>
   );
 };
