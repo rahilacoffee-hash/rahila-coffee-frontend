@@ -33,7 +33,7 @@ export default function AccountMenu() {
             aria-haspopup="true"
             aria-expanded={open ? "true" : undefined}
           >
-            <FaRegCircleUser className="text-[#fff8dc] text-[23px]" />
+            <FaRegCircleUser className="text-[#b8780b] text-[23px]" />
           </IconButton>
         </Tooltip>
       </Box>
