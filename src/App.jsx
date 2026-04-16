@@ -26,6 +26,8 @@ import CoffeeStories from "./pages/Stories/CoffeeStories";
 import ContactUs from "./pages/Contact/ContactUs";
 import AboutUs from "./pages/About/AboutUs";
 import HelpCenter from "./pages/HelpCenter/HelpCenter";
+import VerifyForgotOTP from "./pages/Verify/verify-forgot-otp";
+import ChangePassword from "./pages/Login_signup/ChangePassword";
 
 export const MyContext = createContext();
 
@@ -132,6 +134,8 @@ const App = () => {
                     <Route path="/contact" element={<ContactUs />} />
                     <Route path="/about" element={<AboutUs />} />
                     <Route path="/help-center" element={<HelpCenter />} />
+                    <Route path="/verify-forgot-otp" element={<VerifyForgotOTP />} />
+                    <Route path="/change-password" element={<ChangePassword />} />
                   </Routes>
                   <Footer />
                 </>
