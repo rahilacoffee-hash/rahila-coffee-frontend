@@ -1,14 +1,11 @@
-
 import React, { useState, useEffect, useContext } from "react";
 import Breadcrumbs from "@mui/material/Breadcrumbs";
 import { Link, useParams } from "react-router-dom";
 import Rating from "@mui/material/Rating";
-import ProductZoom from "../../components/productZoom/ProductZoom";
 import QtyBox from "../../components/QtyBox/QtyBox";
 import Button from "@mui/material/Button";
 import { IoMdHeartEmpty } from "react-icons/io";
 import { IoGitCompareOutline } from "react-icons/io5";
-import TextField from "@mui/material/TextField";
 import api from "../../api/axios";
 import { MyContext } from "../../App";
 import ProductReviews from "../ProductReviews/ProductReviews";
@@ -19,8 +16,7 @@ const ProductDetails = () => {
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
   const [qty, setQty] = useState(1);
-  const [review, setReview] = useState("");
-  const [rating, setRating] = useState(4);
+
   const context = useContext(MyContext);
 
   useEffect(() => {
@@ -43,11 +39,19 @@ const ProductDetails = () => {
       context.openAlertBox("error", "Please login first");
       return;
     }
+
     try {
-      await api.post("/cart/add", { productId: product._id });
+      await api.post("/cart/add", {
+        productId: product._id,
+        quantity: qty,
+      });
+
       context.openAlertBox("success", "Added to cart!");
     } catch (err) {
-      context.openAlertBox("error", err.response?.data?.message || "Failed to add");
+      context.openAlertBox(
+        "error",
+        err.response?.data?.message || "Failed to add"
+      );
     }
   };
 
@@ -56,6 +60,7 @@ const ProductDetails = () => {
       context.openAlertBox("error", "Please login first");
       return;
     }
+
     try {
       await api.post("/mylist/add", {
         productId: product._id,
@@ -64,163 +69,156 @@ const ProductDetails = () => {
         rating: product.rating,
         price: product.price,
       });
+
       context.openAlertBox("success", "Added to wishlist!");
     } catch (err) {
-      context.openAlertBox("error", err.response?.data?.message || "Failed");
+      context.openAlertBox(
+        "error",
+        err.response?.data?.message || "Failed"
+      );
     }
   };
 
-  if (loading) return <p className="text-center py-20">Loading...</p>;
-  if (!product) return <p className="text-center py-20">Product not found.</p>;
+  if (loading)
+    return <p className="text-center py-20">Loading...</p>;
+
+  if (!product)
+    return <p className="text-center py-20">Product not found.</p>;
 
   return (
     <>
-      <div className="py-5">
+      {/* Breadcrumb */}
+      <div className="py-5 bg-[#2c1a0e]">
         <div className="container text-white">
-          <Breadcrumbs aria-label="breadcrumb" className="!text-white">
-            <Link underline="hover" color="inherit" href="/" className="link transition">Home</Link>
-            <Link underline="hover" color="inherit" href="/" className="link transition">Single Origin</Link>
-            <Link underline="hover" color="inherit" href="/" className="link transition">{product.name}</Link>
+          <Breadcrumbs className="!text-white">
+            <Link to="/" className="link">Home</Link>
+            <Link to="/" className="link">Products</Link>
+            <span>{product.name}</span>
           </Breadcrumbs>
         </div>
       </div>
 
-     <section className="bg-white py-5">
-  <div className="container flex flex-col lg:flex-row gap-5">
+      {/* MAIN */}
+      <section className="bg-white py-5">
+        <div className="container flex flex-col lg:flex-row gap-6">
 
-    {/* IMAGE */}
-    <div className="w-full lg:w-[40%]">
-      <img
-        src={product.images?.[0]}
-        alt={product.name}
-        className="w-full h-auto rounded-md"
-      />
-    </div>
-
-    {/* DETAILS */}
-    <div className="w-full lg:w-[60%] lg:pr-10 lg:pl-10">
-      <h1 className="text-[18px] sm:text-[22px] font-bold mb-1">
-        {product.name}
-      </h1>
-
-      <div className="flex items-center gap-3 flex-wrap">
-        <span className="text-gray-400 text-[13px] sm:text-[15px]">
-          Origin:{" "}
-          <span className="font-[500] text-black opacity-75">
-            {product.origin}
-          </span>
-        </span>
-      </div>
-
-      <div className="flex items-center gap-2 mt-1">
-        <Rating size="small" value={product.rating || 0} readOnly />
-        <span className="text-[12px] sm:text-[13px] cursor-pointer">
-          Reviews (0)
-        </span>
-      </div>
-
-      <div className="flex items-center justify-between mb-2 mt-3">
-        <h1 className="text-lg sm:text-xl font-bold text-[#2c1a0e]">
-          ${product.price}
-        </h1>
-      </div>
-
-      <p className="mt-3 mb-5 text-[14px] sm:text-[15px]">
-        {product.description}
-      </p>
-
-      <div>
-        <span className="inline-block bg-amber-100 border border-amber-300 text-amber-800 text-[10px] sm:text-xs font-semibold px-2 py-0.5 rounded-full mb-2 capitalize">
-          {product.roastLevel} Roast
-        </span>
-      </div>
-
-      <div>
-        <span className="text-[13px] sm:text-[14px] font-bold">
-          {product.countInStock > 0 ? (
-            <>
-              Available:{" "}
-              <span className="text-amber-800">
-                {product.countInStock}
-              </span>
-            </>
-          ) : (
-            <span className="text-red-500">Out of Stock</span>
-          )}
-        </span>
-      </div>
-
-      <p className="text-[14px] mt-3 mb-2">
-        Free Shipping (2–3 days)
-      </p>
-
-      {/* ADD TO CART */}
-      {product.countInStock > 0 && (
-        <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 mt-3">
-          <div className="w-[80px]">
-            <QtyBox qty={qty} onChange={setQty} />
+          {/* IMAGE */}
+          <div className="w-full lg:w-[40%]">
+            <img
+              src={product.images?.[0]}
+              alt={product.name}
+              className="w-full h-auto rounded-lg"
+            />
           </div>
 
-          <Button
-            onClick={addToCart}
-            className="btn-org w-full sm:w-auto"
-          >
-            Add to Cart
-          </Button>
+          {/* DETAILS */}
+          <div className="w-full lg:w-[60%]">
+
+            <h1 className="text-[18px] sm:text-[22px] font-bold mb-2">
+              {product.name}
+            </h1>
+
+            <p className="text-gray-500 text-sm">
+              Origin: <span className="text-black">{product.origin}</span>
+            </p>
+
+            <div className="flex items-center gap-2 mt-2">
+              <Rating size="small" value={product.rating || 0} readOnly />
+              <span className="text-xs">(0 reviews)</span>
+            </div>
+
+            <h2 className="text-xl font-bold text-[#2c1a0e] mt-3">
+              ${product.price}
+            </h2>
+
+            <p className="mt-3 text-sm">
+              {product.description}
+            </p>
+
+            <span className="inline-block mt-3 bg-amber-100 text-amber-800 text-xs px-2 py-1 rounded">
+              {product.roastLevel} Roast
+            </span>
+
+            <p className="mt-3 text-sm font-semibold">
+              {product.countInStock > 0 ? (
+                <span className="text-green-600">
+                  In Stock ({product.countInStock})
+                </span>
+              ) : (
+                <span className="text-red-500">Out of Stock</span>
+              )}
+            </p>
+
+            {/* CART */}
+            {product.countInStock > 0 && (
+              <div className="flex flex-col sm:flex-row gap-3 mt-4">
+
+                <div className="w-[90px]">
+                  <QtyBox qty={qty} onChange={setQty} />
+                </div>
+
+                <Button
+                  onClick={addToCart}
+                  className="btn-org w-full sm:w-auto"
+                >
+                  Add to Cart
+                </Button>
+              </div>
+            )}
+
+            {/* ACTIONS */}
+            <div className="flex flex-col sm:flex-row gap-4 mt-5 text-sm font-semibold">
+
+              <span
+                onClick={addToWishlist}
+                className="flex items-center gap-2 cursor-pointer"
+              >
+                <IoMdHeartEmpty /> Wishlist
+              </span>
+
+              <span className="flex items-center gap-2 cursor-pointer">
+                <IoGitCompareOutline /> Compare
+              </span>
+            </div>
+          </div>
         </div>
-      )}
 
-      {/* ACTIONS */}
-      <div className="flex flex-col sm:flex-row gap-3 mt-6">
-        <span
-          onClick={addToWishlist}
-          className="flex items-center gap-2 text-[14px] cursor-pointer font-[600]"
-        >
-          <IoMdHeartEmpty /> Wishlist
-        </span>
+        {/* TABS */}
+        <div className="container mt-10">
 
-        <span className="flex items-center gap-2 text-[14px] cursor-pointer font-[600]">
-          <IoGitCompareOutline /> Compare
-        </span>
-      </div>
-    </div>
-  </div>
+          <div className="flex gap-6 border-b pb-2">
+            <span
+              onClick={() => setActiveTab(0)}
+              className={`cursor-pointer ${
+                activeTab === 0 ? "font-bold" : ""
+              }`}
+            >
+              Description
+            </span>
 
-  {/* TABS */}
-  <div className="container pt-10">
-    <div className="flex gap-6 border-b pb-2">
-      <span
-        className={`cursor-pointer text-[15px] sm:text-[17px] ${
-          activeTab === 0 ? "font-bold" : ""
-        }`}
-        onClick={() => setActiveTab(0)}
-      >
-        Description
-      </span>
+            <span
+              onClick={() => setActiveTab(1)}
+              className={`cursor-pointer ${
+                activeTab === 1 ? "font-bold" : ""
+              }`}
+            >
+              Reviews
+            </span>
+          </div>
 
-      <span
-        className={`cursor-pointer text-[15px] sm:text-[17px] ${
-          activeTab === 1 ? "font-bold" : ""
-        }`}
-        onClick={() => setActiveTab(1)}
-      >
-        Reviews
-      </span>
-    </div>
+          {activeTab === 0 && (
+            <div className="mt-4 p-4 shadow rounded">
+              {product.description}
+            </div>
+          )}
 
-    {activeTab === 0 && (
-      <div className="shadow-md w-full py-5 px-4 sm:px-8 rounded-md mt-4">
-        <p className="text-[14px]">{product.description}</p>
-      </div>
-    )}
-
-    {activeTab === 1 && (
-      <div className="shadow-md w-full lg:w-[80%] py-5 px-4 sm:px-8 rounded-md mt-4">
-        <ProductReviews productId={id} />
-      </div>
-    )}
-  </div>
-</section>
+          {activeTab === 1 && (
+            <div className="mt-4 p-4 shadow rounded">
+              <ProductReviews productId={id} />
+            </div>
+          )}
+        </div>
+      </section>
     </>
   );
 };
