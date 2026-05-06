@@ -221,19 +221,12 @@ const ContactUs = () => {
                     </Button>
 
                     {/* Success/Error Message */}
-                    
-                  </form>
-                </div>
-              </div>
-                      <div
-                className={`hidden lg:block absolute lg:bottom-2  lg:-right-80 md:right-1 md:-bottom-8  transfrom translate-x-8 translate-y-8 w-72 backdrop-blur-xl rounded-lg p-4 border border-black/20 shadow-2xl w-[500px]  `}
-              >
-              {submitStatus.type && (
+                    {submitStatus.type && (
                       <div
                         className={`flex items-center gap-3 p-4 rounded-xl ${
                           submitStatus.type === "success"
-                            ? "bg-green-500/10 border border-green-500/20 text-green-900"
-                            : "bg-red-500/10 border border-red-500/20 text-red-900"
+                            ? "bg-green-500/10 border border-green-500/20 text-green-500"
+                            : "bg-red-500/10 border border-red-500/20 text-red-500"
                         }`}
                       >
                         {submitStatus.type === "success" ? (
@@ -245,6 +238,8 @@ const ContactUs = () => {
                         <p>{submitStatus.message}</p>
                       </div>
                     )}
+                  </form>
+                </div>
               </div>
             </div>
           </div>
