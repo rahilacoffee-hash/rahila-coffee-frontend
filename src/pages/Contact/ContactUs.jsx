@@ -232,8 +232,8 @@ const ContactUs = () => {
                       <div
                         className={`flex items-center gap-3 p-4 rounded-xl ${
                           submitStatus.type === "success"
-                            ? "bg-green-500/10 border border-green-500/20 text-green-500"
-                            : "bg-red-500/10 border border-red-500/20 text-red-500"
+                            ? "bg-green-500/10 border border-green-500/20 text-green-900"
+                            : "bg-red-500/10 border border-red-500/20 text-red-900"
                         }`}
                       >
                         {submitStatus.type === "success" ? (
