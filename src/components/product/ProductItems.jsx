@@ -33,6 +33,13 @@ const ProductItems = ({ product }) => {
     e.preventDefault();
     if (!context.isLogin) { context.openAlertBox("error", "Please login first"); return; }
     try {
+      const existing = context.wishlistItems?.find((item) => item.productId === product._id);
+      if (existing) {
+        await api.delete(`/mylist/delete/${existing._id}`);
+        context.openAlertBox("success", "Removed from wishlist");
+        context.fetchWishlist?.();
+        return;
+      }
       await api.post("/mylist/add", {
         productId: product._id,
         productTitle: product.name,
@@ -40,6 +47,7 @@ const ProductItems = ({ product }) => {
         rating: product.rating || 0,
         price: product.price,
       });
+      context.fetchWishlist?.();
       context.openAlertBox("success", "Added to wishlist!");
     } catch (err) {
       context.openAlertBox("error", err.response?.data?.message || "Already in wishlist");

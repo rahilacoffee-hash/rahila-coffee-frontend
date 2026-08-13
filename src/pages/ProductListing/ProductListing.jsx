@@ -45,7 +45,7 @@ const ProductListing = () => {
 
       if (search) params.append("search", search);
       if (roast) params.append("roast", roast);
-      if (category) params.append("category", category);
+      if (category) params.append("catName", category);
       if (origin) params.append("origin", origin);
 
       if (sort === "priceLow") params.append("sort", "price");

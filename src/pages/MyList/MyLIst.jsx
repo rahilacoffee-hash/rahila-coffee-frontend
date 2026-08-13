@@ -9,20 +9,31 @@ import api from "../../api/axios";
 import { MyContext } from "../../App";
 
 const MyList = () => {
-  const [myList, setMyList] = useState([]);
-  const [loading, setLoading] = useState(true);
   const context = useContext(MyContext);
+  const [myList, setMyList] = useState(context.wishlistItems || []);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     if (context.isLogin) fetchMyList();
+    else { setMyList([]); setLoading(false); }
   }, [context.isLogin]);
+
+  // The header/product cards share this state, so use it immediately when it
+  // changes instead of briefly rendering an empty wishlist page.
+  useEffect(() => {
+    setMyList(context.wishlistItems || []);
+    if (context.isLogin) setLoading(false);
+  }, [context.wishlistItems, context.isLogin]);
 
   const fetchMyList = async () => {
     try {
-      const res = await api.get("/mylist");
-      setMyList(res.data.data || []);
+      const res = await api.get("/mylist/get");
+      const items = res.data.data || [];
+      setMyList(items);
+      context.fetchWishlist?.();
     } catch (err) {
       console.error(err);
+      context.openAlertBox("error", err.response?.data?.message || "Could not load your wishlist");
     } finally {
       setLoading(false);
     }
@@ -30,8 +41,9 @@ const MyList = () => {
 
   const removeFromList = async (id) => {
     try {
-      await api.delete(`/mylist/${id}`);
+      await api.delete(`/mylist/delete/${id}`);
       context.openAlertBox("success", "Removed from list");
+      context.fetchWishlist?.();
       fetchMyList();
     } catch (err) {
       context.openAlertBox("error", "Failed to remove");

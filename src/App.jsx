@@ -19,7 +19,7 @@ import MyAccount from "./pages/MyAccount/MyAccount";
 import MyList from "./pages/MyList/MyLIst";
 import Orders from "./pages/Orders/Orders";
 import Logout from "./pages/Logout/LogOut";
-import api from "./api/axios";
+import api, { hasUsableAccessToken } from "./api/axios";
 import OrderTracking from "./pages/OrderTracking/OrderTracking";
 import StoryDetail from "./pages/Stories/StoryDetail";
 import CoffeeStories from "./pages/Stories/CoffeeStories";
@@ -35,27 +35,72 @@ const App = () => {
   const [openCartPanel, setOpennCartPanel] = useState(false);
   const [cartItems, setCartItems] = useState([]);
   const [cartLoading, setCartLoading] = useState(false);
+  const [wishlistIds, setWishlistIds] = useState([]);
+  const [wishlistItems, setWishlistItems] = useState([]);
 
   const [user, setUser] = useState(
-    JSON.parse(localStorage.getItem("user")) || null,
+    hasUsableAccessToken() ? JSON.parse(localStorage.getItem("user")) || null : null,
   );
   const [isLogin, setIsLogin] = useState(
-    localStorage.getItem("accessToken") ? true : false,
+    hasUsableAccessToken,
   );
 
-  // ── Fetch cart whenever login state changes
   useEffect(() => {
-    if (isLogin) fetchCartItems();
-    else setCartItems([]);
+    const handleExpiredSession = () => {
+      setUser(null);
+      setIsLogin(false);
+      setCartItems([]);
+      setWishlistIds([]);
+      setWishlistItems([]);
+    };
+    window.addEventListener("auth:expired", handleExpiredSession);
+    return () => window.removeEventListener("auth:expired", handleExpiredSession);
+  }, []);
+
+  // Load protected data in sequence. If the server rejects a token, the cart
+  // request clears the session before a wishlist request can be made as well.
+  useEffect(() => {
+    if (!isLogin) {
+      setCartItems([]);
+      setWishlistIds([]);
+      setWishlistItems([]);
+      return;
+    }
+
+    const loadAccountItems = async () => {
+      await fetchCartItems();
+      if (hasUsableAccessToken()) fetchWishlist();
+    };
+
+    loadAccountItems();
   }, [isLogin]);
 
+  const fetchWishlist = async () => {
+    if (!isLogin || !hasUsableAccessToken()) {
+      setWishlistIds([]);
+      return setWishlistItems([]);
+    }
+    try {
+      const res = await api.get("/mylist/get");
+      const items = res.data.data || [];
+      setWishlistItems(items);
+      setWishlistIds(items.map((item) => item.productId));
+    } catch (err) {
+      if (err.response?.status !== 401) console.error(err);
+    }
+  };
+
   const fetchCartItems = async () => {
+    if (!isLogin || !hasUsableAccessToken()) {
+      setCartItems([]);
+      return;
+    }
     setCartLoading(true);
     try {
       const res = await api.get("/cart");
       setCartItems(res.data.data || []);
     } catch (err) {
-      console.error(err);
+      if (err.response?.status !== 401) console.error(err);
     } finally {
       setCartLoading(false);
     }
@@ -94,6 +139,9 @@ const App = () => {
     setUser,
     cartItems,
     fetchCartItems,
+    wishlistIds,
+    wishlistItems,
+    fetchWishlist,
   };
 
   return (

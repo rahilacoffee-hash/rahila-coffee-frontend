@@ -30,6 +30,7 @@ const Header = () => {
   const open    = Boolean(anchorEl);
   const context = useContext(MyContext);
   const cartCount = context.cartItems?.length || 0;
+  const wishlistCount = context.wishlistIds?.length || 0;
 
   const handleClick = (e) => setAnchorEl(e.currentTarget);
   const handleClose = ()  => setAnchorEl(null);
@@ -148,11 +149,13 @@ const Header = () => {
             {/* Wishlist — sm+ */}
             <div className="hidden sm:block">
               <Tooltip title="My Wishlist">
-                <IconButton>
-                  <StyledBadge badgeContent={0} color="secondary">
-                    <IoMdHeartEmpty className="text-[#D4A853] text-[20px]" />
-                  </StyledBadge>
-                </IconButton>
+                <Link to="/my-list" aria-label="Open my wishlist">
+                  <IconButton>
+                    <StyledBadge badgeContent={wishlistCount} color="secondary" showZero={false}>
+                      <IoMdHeartEmpty className="text-[#D4A853] text-[20px]" />
+                    </StyledBadge>
+                  </IconButton>
+                </Link>
               </Tooltip>
             </div>
 

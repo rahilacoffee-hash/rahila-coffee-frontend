@@ -19,7 +19,7 @@ const Home = () => {
   const handleChange = (event, newValue) => setValue(newValue);
 
   const categories = [
-    "Single Origin","Blends","Espresso",
+    "All Products", "Single Origin","Blends","Espresso",
     "Cold Brew","Equipment","Liquor & Sweets",
     "Coffee Bean","Coffee Ground","E.S.E Pods",
   ];
@@ -32,7 +32,10 @@ const Home = () => {
     setLoading(true);
     try {
       const params = new URLSearchParams();
-      if (categories[value]) params.append("catName", categories[value]);
+      const selectedCategory = categories[value];
+      if (selectedCategory && selectedCategory !== "All Products") {
+        params.append("catName", selectedCategory);
+      }
       const res = await api.get(`/product?${params.toString()}`);
       setProducts(res.data.data || []);
     } catch (err) {
@@ -158,7 +161,7 @@ const Home = () => {
         <div className="container">
           <h2 className="text-[20px] sm:text-[25px] font-bold">New Arrivals</h2>
           <p className="text-[13px] text-gray-500 mb-4">Check out our latest products</p>
-          <ProductSlider items={6} />
+          <ProductSlider items={6} filter="newArrival" />
         </div>
       </section>
 
@@ -172,7 +175,7 @@ const Home = () => {
         <div className="container">
           <h2 className="text-[20px] sm:text-[25px] font-bold">Most Popular</h2>
           <p className="text-[13px] text-gray-500 mb-4">Loved by our customers</p>
-          <ProductSlider items={6} />
+          <ProductSlider items={6} filter="popular" />
         </div>
       </section>
     </>

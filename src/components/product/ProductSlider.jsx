@@ -16,7 +16,6 @@ import { MyContext } from "../../App";
 function ProductSlider({ items = 6, filter = "newArrival" }) {
   const [products, setProducts]   = useState([]);
   const [loading, setLoading]     = useState(true);
-  const [wishlist, setWishlist]   = useState([]);
   const context                   = useContext(MyContext);
 
   useEffect(() => {
@@ -28,7 +27,7 @@ function ProductSlider({ items = 6, filter = "newArrival" }) {
     try {
       const params = new URLSearchParams();
       if (filter === "newArrival") params.append("isNewArrival", "true");
-      if (filter === "popular")    params.append("isFeatured",   "true");
+      if (filter === "popular")    params.append("isMostPopular", "true");
       params.append("limit", items);
 
       const res = await api.get(`/product?${params.toString()}`);
@@ -54,10 +53,22 @@ function ProductSlider({ items = 6, filter = "newArrival" }) {
     }
   };
 
-  const toggleWishlist = (id) => {
-    setWishlist((prev) =>
-      prev.includes(id) ? prev.filter((w) => w !== id) : [...prev, id]
-    );
+  const toggleWishlist = async (product) => {
+    if (!context.isLogin) return context.openAlertBox("error", "Please login first");
+    try {
+      const existing = context.wishlistItems?.find((item) => item.productId === product._id);
+      if (existing) {
+        await api.delete(`/mylist/delete/${existing._id}`);
+        context.openAlertBox("success", "Removed from wishlist");
+        context.fetchWishlist?.();
+        return;
+      }
+      await api.post("/mylist/add", { productId: product._id, productTitle: product.name, image: product.images?.[0] || "", rating: product.rating || 0, price: product.price });
+      context.fetchWishlist?.();
+      context.openAlertBox("success", "Added to wishlist!");
+    } catch (err) {
+      context.openAlertBox("error", err.response?.data?.message || "Unable to update wishlist");
+    }
   };
 
   const breakpoints = {
@@ -112,8 +123,8 @@ function ProductSlider({ items = 6, filter = "newArrival" }) {
           <SwiperSlide key={product._id}>
             <ProductCard
               product={product}
-              isWishlisted={wishlist.includes(product._id)}
-              onToggleWishlist={() => toggleWishlist(product._id)}
+              isWishlisted={context.wishlistIds?.includes(product._id)}
+              onToggleWishlist={() => toggleWishlist(product)}
               onAddToCart={() => handleAddToCart(product)}
             />
           </SwiperSlide>

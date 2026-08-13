@@ -4,7 +4,7 @@ import { Link, useParams } from "react-router-dom";
 import Rating from "@mui/material/Rating";
 import QtyBox from "../../components/QtyBox/QtyBox";
 import Button from "@mui/material/Button";
-import { IoMdHeartEmpty } from "react-icons/io";
+import { IoMdHeart, IoMdHeartEmpty } from "react-icons/io";
 import { IoGitCompareOutline } from "react-icons/io5";
 import api from "../../api/axios";
 import { MyContext } from "../../App";
@@ -62,6 +62,13 @@ const ProductDetails = () => {
     }
 
     try {
+      const existing = context.wishlistItems?.find((item) => item.productId === product._id);
+      if (existing) {
+        await api.delete(`/mylist/delete/${existing._id}`);
+        context.fetchWishlist?.();
+        context.openAlertBox("success", "Removed from wishlist");
+        return;
+      }
       await api.post("/mylist/add", {
         productId: product._id,
         productTitle: product.name,
@@ -69,7 +76,7 @@ const ProductDetails = () => {
         rating: product.rating,
         price: product.price,
       });
-
+      context.fetchWishlist?.();
       context.openAlertBox("success", "Added to wishlist!");
     } catch (err) {
       context.openAlertBox(
@@ -84,6 +91,8 @@ const ProductDetails = () => {
 
   if (!product)
     return <p className="text-center py-20">Product not found.</p>;
+
+  const isWishlisted = context.wishlistIds?.includes(product._id);
 
   return (
     <>
@@ -173,7 +182,8 @@ const ProductDetails = () => {
                 onClick={addToWishlist}
                 className="flex items-center gap-2 cursor-pointer"
               >
-                <IoMdHeartEmpty /> Wishlist
+                {isWishlisted ? <IoMdHeart className="text-red-500" /> : <IoMdHeartEmpty />}
+                {isWishlisted ? "Remove from Wishlist" : "Add to Wishlist"}
               </span>
 
               <span className="flex items-center gap-2 cursor-pointer">
