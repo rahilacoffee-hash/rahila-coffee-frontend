@@ -10,6 +10,7 @@ import ProductSlider from "../../components/product/ProductSlider";
 import CoffeeStories from "../Stories/CoffeeStories";
 import api from "../../api/axios";
 import HomeProductItems from "../../components/product/HomeProductItems";
+import { Link } from "react-router-dom";
 
 const Home = () => {
   const [value, setValue]       = useState(0);
@@ -48,41 +49,129 @@ const Home = () => {
   return (
     <>
       {/* ── Hero ── */}
-      <div className="hero min-h-[480px] sm:min-h-[580px] bg-[#F5F0EB] flex items-center">
-        <div className="container py-8 sm:py-0">
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 items-center">
+     <div
+  className="hero min-h-[680px] lg:min-h-[760px] bg-[#F5F0EB] bg-cover bg-center flex items-center overflow-hidden"
+  style={{
+    backgroundImage: `url("/image/rahila-coffee-hero.png")`,
+  }}
+>
+  {/* Soft overlay to keep text readable */}
+  <div className="absolute inset-0 bg-gradient-to-r from-[#F5F0EB]/95 via-[#F5F0EB]/70 to-transparent" />
 
-            {/* Text */}
-            <div className="flex flex-col gap-4 order-2 sm:order-1 text-center sm:text-left">
-              <div className="w-fit mx-auto sm:mx-0 px-4 py-1 bg-[#A0522D] text-[#F5F0EB] rounded-full text-[12px] sm:text-sm font-semibold tracking-wide">
-                ☕ Premium Roasts · Abuja's Finest
-              </div>
-              <h1 className="text-[2.5rem] sm:text-5xl lg:text-6xl font-bold leading-tight text-[#2C1A0E]">
-                We Serve <br />
-                the Richest{" "}
-                <span className="italic text-[#A0522D]">Coffee</span>
-                <br />
-                in the City
-              </h1>
-              <p className="text-[14px] sm:text-base max-w-md mx-auto sm:mx-0 text-[#2C1A0E]">
-                Handpicked beans, expertly brewed. From espresso to cold brew —
-                experience coffee the way it was meant to be.
-              </p>
-            </div>
+  <div className="container relative z-10 py-16 lg:py-20">
+    <div className="max-w-[650px]">
 
-            {/* Image */}
-            <div className="flex justify-center items-center order-1 sm:order-2 relative">
-              <div className="absolute w-[220px] h-[220px] sm:w-[320px] sm:h-[320px] lg:w-[420px] lg:h-[420px] bg-[#D4A853] rounded-full imgbg" />
-              <img
-                src={HeroImg}
-                alt="Coffee beans"
-                className="w-[200px] sm:w-[300px] lg:w-[400px] mx-auto relative z-10 spin drop-shadow-2xl"
-              />
-            </div>
-          </div>
+      {/* ================= TEXT ================= */}
+      <div className="flex flex-col items-center lg:items-start text-center lg:text-left">
+
+        {/* Badge */}
+        <div className="w-fit px-4 py-2 border border-[#A0522D]/40 text-[#6B3A20] rounded-full text-[11px] sm:text-xs font-semibold tracking-[0.16em] uppercase">
+          ☕ Premium Roasts · Abuja's Finest
         </div>
+
+        {/* Heading */}
+        <h1 className="mt-7 text-[3.2rem] sm:text-6xl lg:text-[5.5rem] xl:text-[6rem] font-serif font-medium leading-[0.95] tracking-[-0.04em] text-[#2C1A0E]">
+          Good Coffee.
+          <br />
+
+          <span className="italic text-[#A0522D]">
+            Better Mornings.
+          </span>
+        </h1>
+
+        {/* Description */}
+        <p className="mt-7 max-w-lg text-[15px] sm:text-base leading-7 text-[#5A4639]">
+          Carefully sourced beans, expertly roasted and brewed to bring out
+          rich flavors in every cup. Made for slow moments and good
+          conversations.
+        </p>
+
+        {/* CTA */}
+        <div className="flex flex-col sm:flex-row gap-3 mt-8">
+<Link to="/ShopNow">
+          <button
+            className="
+              px-7 py-3.5
+              bg-[#A0522D]
+              text-white
+              rounded-full
+              text-sm
+              font-semibold
+              tracking-wide
+              hover:bg-[#8B4526]
+              transition-all
+              duration-300
+              hover:-translate-y-0.5
+              shadow-lg
+              shadow-[#A0522D]/20
+            "
+          >
+            Shop Coffee
+          </button>
+          </Link>
+<Link to="/about">
+          <button
+            className="
+              px-7 py-3.5
+              border
+              border-[#6B3A20]/40
+              text-[#3A2518]
+              rounded-full
+              text-sm
+              font-semibold
+              tracking-wide
+              hover:bg-[#2C1A0E]
+              hover:text-white
+              transition-all
+              duration-300
+            "
+          >
+            Our Story
+          </button>
+          </Link>
+
+        </div>
+
+        {/* Features */}
+        <div className="grid grid-cols-3 gap-5 sm:gap-8 mt-12 pt-7 border-t border-[#2C1A0E]/10 w-full max-w-xl">
+
+          <div>
+            <p className="text-lg font-semibold text-[#2C1A0E]">
+              100%
+            </p>
+
+            <p className="text-[11px] sm:text-xs text-[#765F50] mt-1">
+              Premium Beans
+            </p>
+          </div>
+
+          <div className="border-x border-[#2C1A0E]/10">
+            <p className="text-lg font-semibold text-[#2C1A0E]">
+              Small
+            </p>
+
+            <p className="text-[11px] sm:text-xs text-[#765F50] mt-1">
+              Batch Roasted
+            </p>
+          </div>
+
+          <div>
+            <p className="text-lg font-semibold text-[#2C1A0E]">
+              Fresh
+            </p>
+
+            <p className="text-[11px] sm:text-xs text-[#765F50] mt-1">
+              From Farm to Cup
+            </p>
+          </div>
+
+        </div>
+
       </div>
 
+    </div>
+  </div>
+</div>
       {/* ── Nav Swiper ── */}
       <NavSwiper />
 
