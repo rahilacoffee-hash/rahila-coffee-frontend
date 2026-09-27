@@ -468,7 +468,7 @@ const Header = () => {
 
               {context.isLogin === false ? (
 
-                <div className="hidden sm:block ml-1">
+                <div className="block ">
 
                   <Profile />
 
