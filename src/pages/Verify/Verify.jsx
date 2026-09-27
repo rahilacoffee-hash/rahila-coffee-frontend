@@ -1,90 +1,35 @@
 import React, { useState } from "react";
-import shield from "../../assets/security.png";
-import OtpBox from "../../components/OTP/OtpBox";
-import Button from "@mui/material/Button";
-import { useNavigate } from "react-router-dom";
+import { Button, TextField } from "@mui/material";
+import { Link, useNavigate } from "react-router-dom";
 import api from "../../api/axios";
+import AuthLayout from "../../components/Auth/AuthLayout";
 
 const Verify = () => {
+  const [email, setEmail] = useState(() => localStorage.getItem("pendingEmail") || "");
   const [otp, setOtp] = useState("");
-  const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-  const handleOtpChange = (value) => {
-    setOtp(value);
-  };
-
-  const VerifyOTP = async (e) => {
-    e.preventDefault();
+  const submit = async (event) => {
+    event.preventDefault();
     setError("");
-
-    if (!otp || otp.length < 4) {
-      setError("Please enter the complete OTP");
-      return;
-    }
-
+    if (!email || otp.length !== 6) return setError("Enter your email and the six-digit code.");
     setLoading(true);
     try {
-      const email = localStorage.getItem("pendingEmail");
-
-      const res = await api.post("/user/verifyEmail", {
-        email,
-        otp,
-      });
-
-      if (res.data.success) {
+      const response = await api.post("/user/verifyEmail", { email, otp });
+      if (response.data.success) {
         localStorage.removeItem("pendingEmail");
         navigate("/login");
       }
     } catch (err) {
-      setError(err.response?.data?.message || "Invalid OTP");
+      setError(err.response?.data?.message || "We couldn't verify that code. Please try again.");
     } finally {
       setLoading(false);
     }
   };
 
-  const pendingEmail = localStorage.getItem("pendingEmail") || "your email";
-
-  return (
-    <section className="section py-10">
-      <div className="container">
-        <div className="card shadow-md w-full max-w-[500px] mx-auto rounded-md bg-white p-5 sm:px-10">
-          <div className="text-center flex items-center justify-center">
-            <img src={shield} width="80" alt="shield" />
-          </div>
-
-          <h3 className="font-[600] text-center text-[18px] mt-4 mb-5">
-            Verify OTP
-          </h3>
-
-          <p className="mt-0">
-            OTP sent to{" "}
-            <span className="text-amber-700 font-bold">{pendingEmail}</span>
-          </p>
-
-          {error && (
-            <p className="text-red-500 text-[13px] mt-2 text-center">{error}</p>
-          )}
-
-          <form onSubmit={VerifyOTP}>
-            <OtpBox length={6} onChange={handleOtpChange} />
-
-            <div className="flex items-center justify-center mt-5 px-4">
-              <Button
-                type="submit"
-                disabled={loading}
-                className="!w-full btn-org btn-lg"
-              >
-                {loading ? "Verifying..." : "Verify"}
-              </Button>
-            </div>
-          </form>
-        </div>
-      </div>
-    </section>
-  );
+  return <AuthLayout title="Verify your email" description="Enter the six-digit code we sent to your inbox." backTo="/signUp" backLabel="Back to sign up"><form className="auth-form" onSubmit={submit}>{error && <p className="auth-alert" role="alert">{error}</p>}<label className="auth-field"><span className="auth-label">Email address</span><TextField fullWidth type="email" value={email} onChange={(e) => setEmail(e.target.value)} /></label><label className="auth-field"><span className="auth-label">Verification code</span><TextField fullWidth inputProps={{ inputMode: "numeric", maxLength: 6 }} value={otp} onChange={(e) => setOtp(e.target.value.replace(/\D/g, ""))} /></label><Button className="auth-submit" type="submit" fullWidth disabled={loading}>{loading ? "Verifying..." : "Verify email"}</Button></form><p className="auth-footer">Already verified? <Link className="auth-link" to="/login">Sign in</Link></p></AuthLayout>;
 };
 
 export default Verify;
