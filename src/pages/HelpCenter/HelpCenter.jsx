@@ -43,7 +43,7 @@ const faqs = [
 const FaqItem = ({ q, a }) => {
   const [open, setOpen] = useState(false);
   return (
-    <div className="border-b border-gray-100">
+    <div className="border-b border-gray-100  ">
       <button
         onClick={() => setOpen(!open)}
         className="w-full flex items-center justify-between py-4 px-5 text-left hover:bg-amber-50 transition-colors rounded-lg"
@@ -73,7 +73,7 @@ const HelpCenter = () => {
     : faqs.filter(cat => cat.category === activeCategory);
 
   return (
-    <section className="py-10 min-h-screen bg-gray-50">
+    <section className="py-10 min-h-screen bg-gray-50  pt-[100px] lg:pt-[110px] pb-0">
       <div className="container max-w-4xl mx-auto px-4">
 
         {/* Header */}

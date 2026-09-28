@@ -92,6 +92,16 @@ const Header = () => {
     setMobileMenuOpen(false);
   }, [location.pathname]);
 
+  useEffect(() => {
+    if (!mobileMenuOpen) return undefined;
+    const handleKeyDown = (event) => {
+      if (event.key === "Escape") setMobileMenuOpen(false);
+    };
+    document.addEventListener("keydown", handleKeyDown);
+    return () => document.removeEventListener("keydown", handleKeyDown);
+  }, [mobileMenuOpen]);
+
+
 
   /* =========================================================
      HANDLERS

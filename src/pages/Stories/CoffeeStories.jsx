@@ -13,7 +13,7 @@ const CoffeeStories = () => {
   useEffect(() => { api.get("/blog").then((res) => setStories(res.data.data || [])).catch(console.error).finally(() => setLoading(false)); }, []);
   const featured = stories[0];
   return (
-    <section className="py-10 min-h-screen bg-gray-50">
+    <section className="py-10 min-h-screen bg-gray-50 pt-[120px] lg:pt-[128px] pb-0">
       <div className="container mx-auto px-4">
 
         {/* Header */}

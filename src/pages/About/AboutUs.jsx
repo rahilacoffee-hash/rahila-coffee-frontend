@@ -4,7 +4,7 @@ import Button from "@mui/material/Button";
 
 const AboutUs = () => {
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen pt-[100px] lg:pt-[110px] pb-0">
 
       {/* Hero */}
       <div className="relative h-[420px] overflow-hidden">

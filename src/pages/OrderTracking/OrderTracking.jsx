@@ -111,7 +111,7 @@ const OrderTracking = () => {
   const currentStep = order ? statusToStep(order.payment_status) : -1;
 
   return (
-    <section className="min-h-screen bg-gradient-to-br from-amber-50 via-white to-orange-100 py-10">
+    <section className="min-h-screen pt-[120px] lg:pt-[128px] pb-0 bg-gradient-to-br from-amber-50 via-white to-orange-100 py-10">
       <div className="max-w-3xl mx-auto px-4">
         
         {/* Header */}
